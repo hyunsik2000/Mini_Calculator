@@ -48,7 +48,6 @@ body {
 }
 
 .button {
-  all: unset;
   width: 65px;
   height: 65px;
   border-radius: 50%;
@@ -60,8 +59,16 @@ body {
   cursor: pointer;
 }
 
+.button.operator {
+  background-color: #f2a33c !important;
+}
+
 .button:hover {
   filter: brightness(1.2);
+}
+
+.button:active {
+  background-color: transparent !important;
 }
 
 .button span {
@@ -73,10 +80,6 @@ body {
 
 :is(#second, #third, #fourth, #fifth) .button {
   background-color: #2a2a2c;
-}
-
-:is(#second, #third, #fourth, #fifth) .button:active {
-  background-color: transparent;
 }
 
 .container-bottom {
