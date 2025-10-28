@@ -53,3 +53,18 @@ function appendNumber(value) {
   }
   updateNumDisplay(formatForDisplay(currentInput));
 }
+
+function eraseAll() {
+  // 입력값 모두 지우기 위한 함수
+  currentInput = "";
+  updateNumDisplay(currentInput);
+}
+
+function changeSign() {
+  // 부호 변환을 위한 함수
+  if (!currentInput) return; // 예외 상황 1. 아무 입력 없을 때  -> 무시
+  if (currentInput.startsWith("-"))
+    currentInput = currentInput.slice(1); // 음수라면 slice(1)를 통해 양수로
+  else currentInput = "-" + currentInput; // 음수가 아니라면 "-"만 붙이기
+  updateNumDisplay(formatForDisplay(currentInput));
+}
