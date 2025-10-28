@@ -68,3 +68,37 @@ function changeSign() {
   else currentInput = "-" + currentInput; // 음수가 아니라면 "-"만 붙이기
   updateNumDisplay(formatForDisplay(currentInput));
 }
+
+function formatForDisplay(value) {
+  // 소숫점 정수 부분을 위한 함수
+  if (!value) return ""; // 예외 상황 1. 빈 값이라면 빈 문자열 출력
+  let sign = ""; // 부호를 담을 변수
+  if (value[0] === "-") {
+    // 초기에 음수 부호를 확인하여 음수 양수 확인하기
+    sign = "-";
+    value = value.slice(1); // 부호를 제외한 숫자 부분만 남기기
+  }
+
+  const [intValue = "", lastValue = ""] = value.split(".");
+
+  const hasDot = value.includes("."); // 값에 현재 소숫점이 있느냐
+
+  // 정수부 포맷: 비어 있으면 그대로(예: "."만 입력 시 intRaw="")
+  let intFormatted = "";
+  if (intValue !== "") {
+    // 선행 0 정리: "00012" -> "12" (단, 전부 0이면 "0")
+    const intClean = intValue.replace(/^0+(?=\d)/, "") || "0";
+    intFormatted = Number(intClean).toLocaleString(
+      navigator.language || "ko-KR"
+    );
+  }
+
+  // 조립
+  if (hasDot) {
+    // ".", "12.", ".5", "0.25" 등
+    return sign + (intFormatted || "") + "." + lastValue;
+  } else {
+    // 순수 정수
+    return sign + (intFormatted || ""); // intRaw가 ""일 수 있으나 그런 경우는 위에서 반환됨
+  }
+}
