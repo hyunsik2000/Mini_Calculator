@@ -70,7 +70,7 @@ function changeSign() {
 }
 
 function formatForDisplay(value) {
-  // 소숫점 정수 부분을 위한 함수
+  // 디스플레이에 숫자에 ',' 추가하는 함수
   if (!value) return ""; // 예외 상황 1. 빈 값이라면 빈 문자열 출력
   let sign = ""; // 부호를 담을 변수
   if (value[0] === "-") {
@@ -80,25 +80,16 @@ function formatForDisplay(value) {
   }
 
   const [intValue = "", lastValue = ""] = value.split(".");
-
   const hasDot = value.includes("."); // 값에 현재 소숫점이 있느냐
-
-  // 정수부 포맷: 비어 있으면 그대로(예: "."만 입력 시 intRaw="")
-  let intFormatted = "";
-  if (intValue !== "") {
-    // 선행 0 정리: "00012" -> "12" (단, 전부 0이면 "0")
-    const intClean = intValue.replace(/^0+(?=\d)/, "") || "0";
-    intFormatted = Number(intClean).toLocaleString(
-      navigator.language || "ko-KR"
-    );
-  }
-
+  let intFormatted = 0; // 변환된 정수 부분 초기화
+  intFormatted = Number(intValue).toLocaleString(); // 정수 부분에 대해 toLocaleString 함수를 통해 숫자에 , 추가
   // 조립
   if (hasDot) {
-    // ".", "12.", ".5", "0.25" 등
-    return sign + (intFormatted || "") + "." + lastValue;
+    // 점이 있을때
+    return sign + intFormatted + "." + lastValue;
   } else {
+    // 없을 때 그냥 출력
     // 순수 정수
-    return sign + (intFormatted || ""); // intRaw가 ""일 수 있으나 그런 경우는 위에서 반환됨
+    return sign + intFormatted;
   }
 }
