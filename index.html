@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>계산기</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="container-top">
+        <div class="top-button1"></div>
+        <div class="top-button2"></div>
+        <div class="top-button3"></div>
+      </div>
+      <div class="display">
+        <input type="text" class="display-text" readonly />
+      </div>
+      <div class="buttons">
+        <div id="first" class="button-list">
+          <div class="button function"><span>C</span></div>
+          <div class="button function"><span>±</span></div>
+          <div class="button function"><span>%</span></div>
+          <div class="button operator" style="background-color: #f2a33c">
+            <span>/</span>
+          </div>
+        </div>
+        <div id="second" class="button-list">
+          <div class="button number"><span>7</span></div>
+          <div class="button number"><span>8</span></div>
+          <div class="button number"><span>9</span></div>
+          <div class="button operator" style="background-color: #f2a33c">
+            <span>×</span>
+          </div>
+        </div>
+        <div id="third" class="button-list">
+          <button class="button number"><span>4</span></button>
+          <div class="button number"><span>5</span></div>
+          <div class="button number"><span>6</span></div>
+          <div class="button operator" style="background-color: #f2a33c">
+            <span>ㅡ</span>
+          </div>
+        </div>
+        <div id="fourth" class="button-list">
+          <div class="button number"><span>1</span></div>
+          <div class="button number"><span>2</span></div>
+          <div class="button number"><span>3</span></div>
+          <div class="button operator" style="background-color: #f2a33c">
+            <span>＋</span>
+          </div>
+        </div>
+        <div id="fifth" class="button-list">
+          <div class="button zero"><span>0</span></div>
+          <div class="button"><span>.</span></div>
+          <div class="button operator" style="background-color: #f2a33c">
+            <span style="font-size: 32px">=</span>
+          </div>
+        </div>
+      </div>
+      <div class="container-bottom"></div>
+    </div>
+    <script src="./utils.js"></script>
+  </body>
+</html>
