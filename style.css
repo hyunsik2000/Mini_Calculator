@@ -34,7 +34,8 @@ body {
 }
 
 .display {
-  height: 200px;
+  display: flex;
+  flex-direction: column;
 }
 
 .display-text {
@@ -44,7 +45,18 @@ body {
   color: white;
   background-color: black;
   border: none;
-  margin-top: 152px;
+  overflow: auto;
+}
+
+.display-subtext {
+  width: 284px;
+  font-size: 30px;
+  text-align: right;
+  color: #808080;
+  background-color: black;
+  border: none;
+  margin-top: 104px;
+  overflow: auto;
 }
 
 .button {
