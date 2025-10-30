@@ -21,15 +21,15 @@ document.querySelectorAll(".button").forEach((key) => {
       changeSign();
     } else if (key.classList.contains("operator")) {
       if (value === "=") {
-        // "=" 버튼을 누른거 하면
+        // "=" 버튼을 누른거면
         if (previousInput !== "" && currentInput !== "" && operator) {
-          // 모든 연산이 존재 할 때 만 계산 -> NaN
-          previousInput = calculateNum(previousInput, operator, currentInput); // 첫번째 값, 두번째 값 이미 저장 되어 있던 값들을 통해 값을 이전 값에 저장
+          // 모든 값이 존재 할 때 만 계산 -> 아니면 NaN 문제 발생함
+          previousInput = calculateNum(previousInput, operator, currentInput); // 첫번째 값, 두번째 값, 이미 저장 되어 있던 operator 값들을 계산하여 이전 값에 저장
           console.log(
             `First Operand: ${currentInput} \n Operator: ${operator}`
           );
-          currentInput = ""; // 계산 완료 후 디스플레이 초기화 => subtext 부분은 놔두기
-          operator = ""; //  초기화 하여 새로운 연산자를 받아올 준비
+          currentInput = ""; // 계산 완료 후 현재 값 디스플레이 초기화 => subtext 부분은 놔두기
+          operator = ""; //  초기화 하여 다음 새로운 연산자를 받아올 준비
           updateSubNumDisplay(formatForDisplay(previousInput)); // 출력
           updateNumDisplay(currentInput); // 출력
         }
@@ -37,17 +37,17 @@ document.querySelectorAll(".button").forEach((key) => {
       }
 
       if (previousInput === "") {
-        // 이전 값이 존재 하지 않을 때
+        // 이전 값이 존재 하지 않을 때 => 첫 연산이 시작될 때
         previousInput = currentInput; // 다음 연산을 위해 처음 계산 값을 prev에 저장
         console.log(`First Operand: ${currentInput} \n Operator: ${operator}`);
-        currentInput = ""; // 디스플레이 초기화
-        operator = value; // 해당 "="를 제외한 연산자 저장
+        currentInput = ""; // 현재 값 디스플레이 초기화
+        operator = value; // 누른 연산자 저장
         updateSubNumDisplay(formatForDisplay(previousInput)); // 출력
         updateNumDisplay(currentInput); // 출력
       } else {
         // 이전 값이 존재 할 때
         if (currentInput === "") {
-          // 숫자를 아직 안쳤기 때문에 초기화 하지 말고 다음 값 기다리기
+          // 아직 연산될 숫자를 입력하지 않았을 경우 이기 때문에 operator 값만 저장
           operator = value;
           return;
         }
@@ -147,13 +147,15 @@ function calculateNum(firstOperand, operator, secondOperand) {
   const b = parseFloat(secondOperand);
   switch (operator) {
     case "＋":
-      return String(a + b);
+      return String(Math.round((a + b + Number.EPSILON) * 10) / 10);
     case "ㅡ":
-      return String(a - b);
+      return String(Math.round((a - b + Number.EPSILON) * 10) / 10);
     case "×":
-      return String(a * b);
+      return String(Math.round((a * b + Number.EPSILON) * 10) / 10);
     case "/":
-      return String(a / b);
+      return b === 0 ? 0 : String(a / b);
+    case "%":
+      return String(Math.round(((a % b) + Number.EPSILON) * 10) / 10);
     default:
       return;
   }
