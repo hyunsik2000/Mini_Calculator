@@ -5,29 +5,29 @@ let previousInput = "";
 const numDisplay = document.querySelector(".display-text");
 const numSubDisplay = document.querySelector(".display-subtext");
 
-document.querySelectorAll(".button").forEach((key) => {
+document.querySelectorAll(".button").forEach((item) => {
+  // 엘리먼트로도 접근 가능
   // 모든 버튼 클래스에 이벤트 리스너를 부착 할거임
-  key.addEventListener("click", (event) => {
+  item.addEventListener("click", () => {
     //버튼 클릭 시 아래 동작 수행
-    const value = key.textContent.trim(); // 버튼의 텍스트를 value 변수에 저장
+    const value = item.textContent.trim(); // 버튼의 텍스트를 value 변수에 저장
     if (!isNaN(value) || value === ".") {
       // 숫자 거나 "." 일 때
-      appendNumber(value);
+      appendValue(value);
     } else if (value === "C") {
       // C (Clear) 버튼을 눌렀을 때
       eraseAll();
     } else if (value === "±") {
       // ± (부호 변환) 버튼을 눌렀을 때
       changeSign();
-    } else if (key.classList.contains("operator")) {
+    } else if (item.classList.contains("operator")) {
       if (value === "=") {
         // "=" 버튼을 누른거면
         if (previousInput !== "" && currentInput !== "" && operator) {
           // 모든 값이 존재 할 때 만 계산 -> 아니면 NaN 문제 발생함
-          previousInput = calculateNum(previousInput, operator, currentInput); // 첫번째 값, 두번째 값, 이미 저장 되어 있던 operator 값들을 계산하여 이전 값에 저장
-          console.log(
-            `First Operand: ${currentInput} \n Operator: ${operator}`
-          );
+          previousInput = String(
+            calculateNum(previousInput, operator, currentInput)
+          ); // 첫번째 값, 두번째 값, 이미 저장 되어 있던 operator 값들을 계산하여 이전 값에 저장
           currentInput = ""; // 계산 완료 후 현재 값 디스플레이 초기화 => subtext 부분은 놔두기
           operator = ""; //  초기화 하여 다음 새로운 연산자를 받아올 준비
           updateSubNumDisplay(formatForDisplay(previousInput)); // 출력
@@ -39,7 +39,6 @@ document.querySelectorAll(".button").forEach((key) => {
       if (previousInput === "") {
         // 이전 값이 존재 하지 않을 때 => 첫 연산이 시작될 때
         previousInput = currentInput; // 다음 연산을 위해 처음 계산 값을 prev에 저장
-        console.log(`First Operand: ${currentInput} \n Operator: ${operator}`);
         currentInput = ""; // 현재 값 디스플레이 초기화
         operator = value; // 누른 연산자 저장
         updateSubNumDisplay(formatForDisplay(previousInput)); // 출력
@@ -51,8 +50,9 @@ document.querySelectorAll(".button").forEach((key) => {
           operator = value;
           return;
         }
-        previousInput = calculateNum(previousInput, operator, currentInput); // 계산 값을 prev에 저장 이때 이전 operator 값으로 실시 해야함
-        console.log(`First Operand: ${currentInput} \n Operator: ${operator}`);
+        previousInput = String(
+          calculateNum(previousInput, operator, currentInput)
+        ); // 계산 값을 prev에 저장 이때 이전 operator 값으로 실시 해야함
         currentInput = ""; // 계산 완료 했기 때문에 디스 플레이 초기화
         operator = value; // 새로운 연산자 값 저장
         updateSubNumDisplay(formatForDisplay(previousInput)); // 출력
@@ -62,7 +62,7 @@ document.querySelectorAll(".button").forEach((key) => {
   });
 });
 
-function appendNumber(value) {
+function appendValue(value) {
   if (value === ".") {
     // 입력받은 값이 "."일때
     if (currentInput.includes(".")) return; // 이미 소숫점이 존재한다면 Pass (예외 상황 1)
@@ -142,21 +142,56 @@ function updateSubNumDisplay(value) {
 }
 
 function calculateNum(firstOperand, operator, secondOperand) {
-  if (firstOperand === null || secondOperand === null) return;
+  // Todo. 더 확실한 검증을 위해..!
+  // 1. 부동소수점 연산 오류 해결
+  // 2. NaN이나 Infinity 처리
+
   const a = parseFloat(firstOperand);
   const b = parseFloat(secondOperand);
+
+  // 2. NaN 처리 ✅ => parseFloat으로 변환 뒤 값에 NaN이 있다면
+  if (isNaN(a) || isNaN(b)) {
+    return 0;
+  }
+
+  let result; // 결과를 담을 변수
+
   switch (operator) {
     case "＋":
-      return String(Math.round((a + b + Number.EPSILON) * 10) / 10);
+      result = a + b;
+      break;
     case "ㅡ":
-      return String(Math.round((a - b + Number.EPSILON) * 10) / 10);
+      result = a - b;
+      break;
     case "×":
-      return String(Math.round((a * b + Number.EPSILON) * 10) / 10);
+      result = a * b;
+      break;
     case "/":
-      return b === 0 ? 0 : String(a / b);
+      // 0으로 나누기 처리
+      if (b === 0) {
+        return 0;
+      }
+      result = a / b;
+      break;
     case "%":
-      return String(Math.round(((a % b) + Number.EPSILON) * 10) / 10);
+      if (b === 0) {
+        return 0;
+      }
+      result = a % b;
+      break;
     default:
-      return;
+      return 0;
   }
+
+  // Todo 1. 부동소수점 연산 오류 해결 ✅
+  // 원래 0.1 + 0.2 = 0.30000000000000004 이 됩니다
+  // 0.30000000000000004 -> 300000000.00000004 => 300000000 => 0.300000000 => 0.3
+  result = Math.round(result * 1e9) / 1e9; //  1e? = 10 ^ ?,  1e1 = 10 ^ 1 , 1e3 = 10 ^ 3
+
+  // Todo 2. Infinity 체크 ✅
+  if (!isFinite(result)) {
+    return 0;
+  }
+
+  return result;
 }
