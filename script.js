@@ -5,12 +5,12 @@ let previousInput = "";
 const numDisplay = document.querySelector(".display-text");
 const numSubDisplay = document.querySelector(".display-subtext");
 
-document.querySelectorAll(".button").forEach((item) => {
+document.querySelectorAll(".button").forEach((element) => {
   // 엘리먼트로도 접근 가능
   // 모든 버튼 클래스에 이벤트 리스너를 부착 할거임
-  item.addEventListener("click", () => {
+  element.addEventListener("click", () => {
     //버튼 클릭 시 아래 동작 수행
-    const value = item.textContent.trim(); // 버튼의 텍스트를 value 변수에 저장
+    const value = element.textContent.trim(); // 버튼의 텍스트를 value 변수에 저장
     if (!isNaN(value) || value === ".") {
       // 숫자 거나 "." 일 때
       appendValue(value);
@@ -20,7 +20,7 @@ document.querySelectorAll(".button").forEach((item) => {
     } else if (value === "±") {
       // ± (부호 변환) 버튼을 눌렀을 때
       changeSign();
-    } else if (item.classList.contains("operator")) {
+    } else if (element.classList.contains("operator")) {
       if (value === "=") {
         // "=" 버튼을 누른거면
         if (previousInput !== "" && currentInput !== "" && operator) {
@@ -142,7 +142,7 @@ function updateSubNumDisplay(value) {
 }
 
 function calculateNum(firstOperand, operator, secondOperand) {
-  // Todo. 더 확실한 검증을 위해..!
+  // Todo. 더 확실한 검증을 위해
   // 1. 부동소수점 연산 오류 해결
   // 2. NaN이나 Infinity 처리
 
